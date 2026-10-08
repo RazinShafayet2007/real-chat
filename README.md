@@ -62,14 +62,3 @@ src/
   server/
     server.js
 ```
-
-## Future Works
-[] Integrating Google OAuth
-[] Creating real user profile
-[x] Integrate real database
-[] Sticker and GIF support
-[] Video and Audio call support
-
-## Future Description
-
-Find your online partner, have endless chat and fun, use countless stickers and GIFs, join a group to multiply the craze.

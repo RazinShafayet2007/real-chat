@@ -13,15 +13,22 @@ import {
 loadEnvConfig(process.cwd());
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
+const app = next({ dev }); // Next.js development server
 const handle = app.getRequestHandler();
 
 const users = new Map(); // socket.id -> username
-const MAX_HISTORY = 100;
+const MAX_HISTORY = 100; // Users can see the last 100 messages
+
+// `broadcastUsers` sends the current list of users to every client connected
+// through `io`. It gets the user records from the `users` map with `users.values()`
+// and convert them into an array with `Array.from()`, then emits that array as the
+// payload of the `users:update` event.
 
 function broadcastUsers(io) {
   io.emit("users:update", Array.from(users.values()));
 }
+
+// Initialization of Server
 
 async function startServer() {
   await app.prepare();
@@ -32,7 +39,9 @@ async function startServer() {
   });
 
   const io = new Server(httpServer, {
-    cors: { origin: "*" },
+    cors: { 
+      origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+    },
   });
 
   io.on("connection", (socket) => {
@@ -98,6 +107,7 @@ async function startServer() {
   });
 }
 
+// Catch errors
 startServer().catch((error) => {
   console.error("Failed to start chat server:", error);
   closeDatabase()

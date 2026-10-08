@@ -18,7 +18,7 @@ export default function Home() {
   const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const s = io();
+    const s = io(process.env.NEXT_PUBLIC_SOCKET_URL || undefined);
     setSocket(s);
     s.on("connect", () => setConnected(true));
     s.on("disconnect", () => setConnected(false));
