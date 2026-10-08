@@ -130,7 +130,7 @@ export default function Home() {
                 <div className="text-xs opacity-60">
                   {m.user} · {new Date(m.at).toLocaleTimeString()}
                 </div>
-                <div className="break-words">{m.text}</div>
+                <div className="wrap-break-word">{m.text}</div>
               </div>
             ))}
             {notices.map((n, i) => (
