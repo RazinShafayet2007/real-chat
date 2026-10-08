@@ -29,6 +29,9 @@ export default function Home() {
     s.on("chat:system", (text: string) =>
       setNotices((prev) => [...prev.slice(-9), text])
     );
+    s.on("chat:error", (text: string) =>
+      setNotices((prev) => [...prev.slice(-9), `Error: ${text}`])
+    );
     s.on("users:update", (u: string[]) => setUsers(u));
     s.on("typing", ({ user, isTyping }: TypingPayload) =>
       setTypingUsers((prev) =>

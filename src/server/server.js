@@ -1,24 +1,32 @@
 import { createServer } from "http";
+import { randomUUID } from "crypto";
+import { loadEnvConfig } from "@next/env";
 import next from "next";
 import { Server } from "socket.io";
+import {
+  closeDatabase,
+  getRecentMessages,
+  initializeDatabase,
+  saveMessage,
+} from "./database.js";
 
+loadEnvConfig(process.cwd());
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-/** @typedef {{ id: string; user: string; text: string; at: number }} ChatMessage */
-
 const users = new Map(); // socket.id -> username
-/** @type {ChatMessage[]} */
-const history = [];
 const MAX_HISTORY = 100;
 
 function broadcastUsers(io) {
   io.emit("users:update", Array.from(users.values()));
 }
 
-app.prepare().then(() => {
+async function startServer() {
+  await app.prepare();
+  await initializeDatabase();
+
   const httpServer = createServer((req, res) => {
     handle(req, res);
   });
@@ -28,7 +36,15 @@ app.prepare().then(() => {
   });
 
   io.on("connection", (socket) => {
-    socket.emit("messages:history", history);
+    getRecentMessages(MAX_HISTORY)
+      .then((history) => socket.emit("messages:history", history))
+      .catch((error) => {
+        console.error("Failed to load message history:", error);
+        socket.emit(
+          "chat:error",
+          "Could not load message history. Please try again later."
+        );
+      });
 
     socket.on("join", (username) => {
       const name = String(username || "anon").slice(0, 24) || "anon";
@@ -37,19 +53,26 @@ app.prepare().then(() => {
       socket.broadcast.emit("chat:system", `${name} joined`);
     });
 
-    socket.on("chat:message", (payload) => {
+    socket.on("chat:message", async (payload) => {
       const user = users.get(socket.id) || "anon";
       const text = String(payload?.text ?? "").slice(0, 1000).trim();
       if (!text) return;
       const msg = {
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: randomUUID(),
         user,
         text,
         at: Date.now(),
       };
-      history.push(msg);
-      if (history.length > MAX_HISTORY) history.shift();
-      io.emit("chat:message", msg);
+      try {
+        await saveMessage(msg);
+        io.emit("chat:message", msg);
+      } catch (error) {
+        console.error("Failed to save chat message:", error);
+        socket.emit(
+          "chat:error",
+          "Message could not be saved. Please try again."
+        );
+      }
     });
 
     socket.on("typing", (isTyping) => {
@@ -73,4 +96,15 @@ app.prepare().then(() => {
       }`
     );
   });
+}
+
+startServer().catch((error) => {
+  console.error("Failed to start chat server:", error);
+  closeDatabase()
+    .catch((closeError) => {
+      console.error("Failed to close PostgreSQL connection pool:", closeError);
+    })
+    .finally(() => {
+      process.exitCode = 1;
+    });
 });
