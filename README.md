@@ -52,3 +52,7 @@ src/
   lib/
     chat-types.ts
 ```
+
+## Future Works
+[] Integrating Google OAuth
+[] Creating real user profile
