@@ -2,9 +2,7 @@
 
 Realtime chat app built with **Next.js (App Router) + Socket.IO**.
 
-Pick a name, join, and chat instantly — with online users, typing indicators, join/leave notices, and last 100 messages of history.
-
-The app currently supports anonymous chat with persistent message history.
+Find your online partner, have endless chat and fun, use countless stickers and GIFs, join a group to multiply the craze. Make vibes you never had!
 
 ## Stack
 

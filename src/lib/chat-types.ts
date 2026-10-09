@@ -1,9 +1,29 @@
+export type MessageKind = "text" | "sticker" | "gif";
+
 export interface ChatMessage {
   id: string;
   user: string;
   text: string;
   at: number;
+  kind?: MessageKind;
+  imageUrl?: string;
+  room?: string;
+  expiresAt?: number | null;
 }
+
+export interface DmHistory {
+  room: string;
+  peer: { id?: string; sid?: string; name: string; email?: string; picture?: string };
+  messages: ChatMessage[];
+}
+
+export const TTL_CHOICES = [
+  { label: "Keep", seconds: 0 },
+  { label: "10s", seconds: 10 },
+  { label: "1m", seconds: 60 },
+  { label: "1h", seconds: 3600 },
+  { label: "24h", seconds: 86400 },
+];
 
 export interface TypingPayload {
   user: string;

@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
+/* Class-based dark mode (toggled by src/lib/theme.ts: system/light/dark). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #171717;
+  --accent-fg: #fafafa;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #ededed;
+  --accent-fg: #0a0a0a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 @theme inline {
@@ -12,11 +31,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Accent presets (data-accent on <html>, set by the theme picker). */
+:root[data-accent="ocean"],
+.dark[data-accent="ocean"] {
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="forest"],
+.dark[data-accent="forest"] {
+  --accent: #16a34a;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="sunset"],
+.dark[data-accent="sunset"] {
+  --accent: #ea580c;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="grape"],
+.dark[data-accent="grape"] {
+  --accent: #9333ea;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="rose"],
+.dark[data-accent="rose"] {
+  --accent: #e11d48;
+  --accent-fg: #ffffff;
+}
+
+/* Primary surfaces follow the accent (buttons, own bubbles, active tabs). */
+.accent-bg {
+  background: var(--accent);
+  color: var(--accent-fg);
 }
 
 body {
