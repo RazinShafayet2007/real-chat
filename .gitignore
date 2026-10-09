@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.neon
+
+# neon agent skills (local-only, not committed)
+.agents/
+skills-lock.json

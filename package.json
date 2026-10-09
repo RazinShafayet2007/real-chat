@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@neon/config": "^1.8.6",
+    "@neon/env": "^1.5.3",
+    "@neondatabase/serverless": "^1.2.0",
     "@next/env": "^16.4.0",
     "next": "16.4.0",
-    "pg": "^8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "socket.io": "^4.8.4",
