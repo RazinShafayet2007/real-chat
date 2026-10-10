@@ -45,3 +45,6 @@ next-env.d.ts
 # neon agent skills (local-only, not committed)
 .agents/
 skills-lock.json
+
+# markdown
+WP-System-Design.md

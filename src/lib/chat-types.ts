@@ -1,4 +1,16 @@
-export type MessageKind = "text" | "sticker" | "gif";
+export type MessageKind = "text" | "sticker" | "gif" | "image";
+
+export interface Reaction {
+  emoji: string;
+  count: number;
+  users: string[];
+}
+
+export interface QuotedMessage {
+  id: string;
+  user: string;
+  text: string;
+}
 
 export interface ChatMessage {
   id: string;
@@ -9,7 +21,19 @@ export interface ChatMessage {
   imageUrl?: string;
   room?: string;
   expiresAt?: number | null;
+  reactions?: Reaction[];
+  replyToId?: string | null;
+  replyTo?: QuotedMessage | null;
+  editedAt?: number | null;
+  authorId?: string | null;
 }
+
+export interface BlockedProfile {
+  id: string;
+  name: string;
+}
+
+export const QUICK_REACTIONS = ["❤️", "😂", "👍", "🎉", "😮", "😢"];
 
 export interface DmHistory {
   room: string;

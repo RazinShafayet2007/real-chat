@@ -49,14 +49,46 @@ Socket events:
 ## Project layout
 
 ```
-.env.example
 src/
   app/
-    page.tsx      # chat UI
-    layout.tsx
+    api/
+      auth/       # Google Authorization
+        callback/
+          google/
+            route.ts
+        google/
+          route.ts
+        logout/
+          route.ts
+        me/
+          route.ts
+      files/
+        [...key]/
+          route.ts
+      gifs/       # GIFs
+        route.ts
+      health/
+        route.ts
+      profile/
+        route.ts
+      rtc-config/
+        route.ts
+      uploads/
+        route.ts
     globals.css
+    layout.tsx
+    page.tsx      # chat UI
+  components/
+    call-panel.tsx
+    sw-register.tsx
   lib/
+    auth.ts
     chat-types.ts
+    s3.ts
+    theme.ts
   server/
+    database.js
     server.js
+.env
+.env.example
 ```
